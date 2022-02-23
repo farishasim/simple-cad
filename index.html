@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>2D WEB CAD</title>
+</head>
+<body>
+<script id="vertex-shader" type="notjs">
+    attribute vec2 coordinates;
+
+    void main() {
+        gl_Position = vec4(coordinates, 0.0, 1.0);
+    }
+</script>
+
+<script id="fragment-shader" type="notjs">
+    void main(void) {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+</script>
+
+    <canvas width="300" height="300" id="canvas"></canvas>
+    <script src="lib/util.js"></script>
+    <script src="src/polygon.js"></script>
+</body>
+</html>
