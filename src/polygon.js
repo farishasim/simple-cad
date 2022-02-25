@@ -13,7 +13,21 @@ var button = {
 
 var currentState = "select"
 
+var colors = [
+    [0.0, 0.0, 0.0, 0.0],  // white
+    [0.0, 0.0, 0.0, 1.0],  // black
+    [1.0, 0.0, 0.0, 1.0],  // red
+    [1.0, 1.0, 0.0, 1.0],  // yellow
+    [0.0, 1.0, 0.0, 1.0],  // green
+    [0.0, 0.0, 1.0, 1.0],  // blue
+    [1.0, 0.0, 1.0, 1.0],  // magenta
+    [0.0, 1.0, 1.0, 1.0]   // cyan
+];
+
+var cindex = 0;
+
 var vertices = [];
+var vtxcolor = [];
 
 var polygons = [];
 
@@ -34,9 +48,15 @@ function main() {
     button.draw.addEventListener("click", () => {
         // drawPolygon(vertices);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        polygons.push(vertices)
-        polygons.forEach( pol => drawPolygon(pol))
+        polygons.push({vertices, vtxcolor})
+        polygons.forEach( pol => drawPolygon(pol.vertices, pol.vtxcolor))
         vertices = [];
+        vtxcolor = [];
+    })
+
+    var menu = document.getElementById("mymenu")
+    menu.addEventListener("click", () => {
+        cindex = menu.selectedIndex;
     })
 }
 
@@ -48,7 +68,7 @@ function handleInput(event) {
             var y = 2*(canvas.height-event.clientY)/canvas.height-1
             // add to array
             vertices.push(x, y);
-            console.log(vertices);
+            vtxcolor = vtxcolor.concat(colors[cindex])
             break;
         default:
             break;
@@ -68,7 +88,7 @@ function changeState(newState) {
     currentState = newState;
 }
 
-function drawPolygon(vertices) {
+function drawPolygon(vertices, color_per_vtc) {
     var vertex_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -83,11 +103,17 @@ function drawPolygon(vertices) {
     var index_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
-
     var coord = gl.getAttribLocation(shaderProgram, "coordinates");
     gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(coord)
-    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
+
+    var cBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, cBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(color_per_vtc), gl.STATIC_DRAW );
+    var vColor = gl.getAttribLocation( shaderProgram, "vColor" );
+    gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray(vColor);
+    gl.drawElements(gl.TRIANGLE_FAN, indices.length, gl.UNSIGNED_SHORT, 0)
 }
 
 main()

@@ -6,24 +6,44 @@
 <body>
 <script id="vertex-shader" type="notjs">
     attribute vec2 coordinates;
+    attribute vec4 vColor;
+
+    varying vec4 fColor;
 
     void main() {
         gl_Position = vec4(coordinates, 0.0, 1.0);
+        fColor = vColor;
     }
 </script>
 
 <script id="fragment-shader" type="notjs">
+    precision mediump float;
+
+    varying vec4 fColor;
+
     void main(void) {
-        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        gl_FragColor = fColor;
     }
 </script>
 
     <canvas width="300" height="300" id="canvas"></canvas>
-
-    <button id="select">Select</button>
-    <button id="create">Create</button>
-    <button id="draw">Draw</button>
-
+    <div>
+        <button id="select">Select</button>
+        <button id="create">Create</button>
+        <button id="draw">Draw</button>
+    </div>
+    <div>
+        <select id = "mymenu" size = "10">
+        <option value = "0">White</option>        
+        <option value = "1">Black</option>
+        <option value = "2">Red</option>
+        <option value = "3">Yellow</option>
+        <option value = "4">Green</option>
+        <option value = "5">Blue</option>
+        <option value = "6">Magenta</option>
+        <option value = "7">Cyan</option>
+    </select>
+    </div>
     <script src="lib/util.js"></script>
     <script src="lib/mv.js"></script>
     <script src="src/polygon.js"></script>
