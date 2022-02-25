@@ -3,6 +3,20 @@
 var gl = null
 var shaderProgram = null
 
+var states = ["select", "create"]
+
+var button = {
+    select: document.getElementById("select"),
+    create: document.getElementById("create"),
+    draw: document.getElementById("draw")
+}
+
+var currentState = "select"
+
+var vertices = [];
+
+var polygons = [];
+
 function main() {
     // initialization
     init()
@@ -11,20 +25,47 @@ function main() {
     gl.clearColor(0, 0, 0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    var vertices = []
-
     document.getElementById("canvas").addEventListener('mousedown', event => {
-        var x = 2*event.clientX/canvas.width-1
-        var y = 2*(canvas.height-event.clientY)/canvas.height-1
-        vertices.push(x, y);
-        console.log(vertices);
+        handleInput(event);
     })
 
-    document.getElementById("draw").addEventListener("click", () => {
+    button.select.addEventListener("click", () => changeState("select"))
+    button.create.addEventListener("click", () => changeState("create"))
+    button.draw.addEventListener("click", () => {
+        // drawPolygon(vertices);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        drawPolygon(vertices);
+        polygons.push(vertices)
+        polygons.forEach( pol => drawPolygon(pol))
         vertices = [];
-    });
+    })
+}
+
+function handleInput(event) {
+    switch (currentState) {
+        case "create":
+            // get coordinates of clicked
+            var x = 2*event.clientX/canvas.width-1
+            var y = 2*(canvas.height-event.clientY)/canvas.height-1
+            // add to array
+            vertices.push(x, y);
+            console.log(vertices);
+            break;
+        default:
+            break;
+    }
+}
+
+function changeState(newState) {
+    if (states.indexOf(newState) === -1) return;
+
+    for (var type in button) {
+        if (Object.prototype.hasOwnProperty.call(button, type)) {
+            button[type].removeAttribute("disabled");
+        }
+    }
+
+    button[newState].setAttribute("disabled", "true");
+    currentState = newState;
 }
 
 function drawPolygon(vertices) {
@@ -46,7 +87,6 @@ function drawPolygon(vertices) {
     var coord = gl.getAttribLocation(shaderProgram, "coordinates");
     gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(coord)
-    console.log(indices)
     gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
 }
 
