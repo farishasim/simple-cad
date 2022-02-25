@@ -47,9 +47,8 @@ function main() {
     button.create.addEventListener("click", () => changeState("create"))
     button.draw.addEventListener("click", () => {
         // drawPolygon(vertices);
-        gl.clear(gl.COLOR_BUFFER_BIT);
         polygons.push({vertices, vtxcolor})
-        polygons.forEach( pol => drawPolygon(pol.vertices, pol.vtxcolor))
+        render()
         vertices = [];
         vtxcolor = [];
     })
@@ -69,6 +68,15 @@ function handleInput(event) {
             // add to array
             vertices.push(x, y);
             vtxcolor = vtxcolor.concat(colors[cindex])
+            break;
+        case "select":
+            // get coordinates of clicked
+            var x = 2*event.clientX/canvas.width-1
+            var y = 2*(canvas.height-event.clientY)/canvas.height-1
+            var idx = getIdxOfLastPolygonThatContains(x,y);
+            console.log(idx)
+            if (idx >= 0) changeColor(polygons[idx]);
+            render()
             break;
         default:
             break;
@@ -114,6 +122,28 @@ function drawPolygon(vertices, color_per_vtc) {
     gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray(vColor);
     gl.drawElements(gl.TRIANGLE_FAN, indices.length, gl.UNSIGNED_SHORT, 0)
+}
+
+function render() {
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    polygons.forEach( pol => drawPolygon(pol.vertices, pol.vtxcolor))
+}
+
+function changeColor(polygon) {
+    var n_vertex = polygon.vertices.length/2;
+    var newColor = [];
+    for(var i=0; i < n_vertex; i++){
+        newColor = newColor.concat(colors[cindex])
+    }
+    polygon.vtxcolor = newColor;
+}
+
+function getIdxOfLastPolygonThatContains(x,y) {
+    var idx = -1;
+    polygons.forEach((element,i) => {
+        if (inside([x,y], element.vertices)) idx = i;
+    });
+    return idx;
 }
 
 main()
