@@ -31,6 +31,7 @@
         <button id="select">Select</button>
         <button id="move">Move</button>
         <br>
+        <button id="line">Line</button>
         <button id="square">Square</button>
         <button id="rectan">Rectangle</button>
         <button id="polygon">Polygon</button>
@@ -52,6 +53,82 @@
         <option value = "6">Magenta</option>
         <option value = "7">Cyan</option>
     </select>
+    <!-- <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn">Color</button>
+        <div id="mymenu" class="dropdown-content">
+            <option value = "0">White</option>        
+            <option value = "1">Black</option>
+            <option value = "2">Red</option>
+            <option value = "3">Yellow</option>
+            <option value = "4">Green</option>
+            <option value = "5">Blue</option>
+            <option value = "6">Magenta</option>
+            <option value = "7">Cyan</option>
+        </div>
+      </div> -->
+    <div id="help-view" class="help" hidden>
+        <br>
+        <button id="close-help">Close Help</button>
+        <!-- Modal content -->
+        <div class="help-content">
+            <h2>Menggambar Garis</h2>
+            <p> 1. Klik tombol <strong>Line </strong> (Default sudah garis) <br/>
+                2. Klik dua koordinat pada canvas
+            </p>
+
+            <h2>Mengubah Panjang Garis</h2>
+            <p>1. Klik tombol <strong>Move</strong> untuk mengubah atau memindahkan garis
+               2. Klik salah satu titik garis pada canvas (Lingkaran di ujung garis) <br />
+               2. Drag ke posisi/koordinat lain di canvas
+               3. Drop titik yang telah dipilih maka garis akan berubah panjangnya
+            </p>
+            
+            <h2>Menggambar Persegi</h2>
+            <p>
+                1. Klik tombol <strong>Square</strong><br/>
+                2. Klik satu koordinat pada canvas sebagai titik pojok kiri atas persegi
+            </p>
+
+            <h2>Mengubah Panjang Sisi Persegi</h2>
+            <p> 1. Klik tombol <strong>Move</strong> <br />
+                2. Klik salah satu titik persegi pada canvas <br />
+                3. Drag dan drop titik yang telah dipilih untuk mengubah panjang sisi persegi
+            </p>
+            
+            <h2>Menggambar Polygon</h2>
+            <p>
+                1. Klik tombol <strong>Polygon</strong><br/>
+                2. Klik sebanyak n titik koordinat pada kanvas, 
+                   sesuai dengan banyaknya titik pada polygon yang ingin dibuat <br/>
+                3. Klik tombol <strong>Draw Polygon</strong>
+            </p>
+
+            <h2>Mengubah Bentuk Polygon</h2>
+            <p> 1. Klik tombol <strong>Move</strong> <br />
+                2. Klik salah satu titik polygon pada canvas <br/>
+                3. Drag dan drop titik yang telah dipilih untuk mengubah bentuk polygon
+            </p>
+            <h2>Mengganti Warna Bangun Datar</h2>
+            <p>
+                1. Klik tombol <strong>Select</strong> <br />
+                2. Pilih warna yang diinginkan pada dropdown <strong>color</strong><br/>
+                3. Pilih Bangun Datar yang ingin dirubah warnanya
+            </p>
+
+            <h2>Menyimpan Gambar</h2>
+            <p>
+                1. Klik tombol <strong>Save</strong> <br/>
+                2. Kemudian akan terdownload sebuah file json (hasil Save File)
+            </p>
+            
+            <h2>Memuat Gambar</h2>
+            <p>
+                1. Klik tombol <strong>Choose File</strong><br/>
+                2. Pilih lokasi file <br/>
+                3. Klik tombol <strong>Load</strong><br/>
+            </p>
+        </div>
+    </div>
     </div>
     <script src="lib/util.js"></script>
     <script src="lib/mv.js"></script>

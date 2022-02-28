@@ -4,17 +4,20 @@ var shaderProgram = null
 
 var canvas = document.getElementById("canvas")
 
-var states = ["select", "create", "move", "polygon", "rectangle", "square"]
+var states = ["select", "create", "move", "polygon", "rectangle", "square", "line"]
 
 var button = {
     select: document.getElementById("select"),
+    line: document.getElementById("line"),
     square: document.getElementById("square"),
     rectangle: document.getElementById("rectan"),
     polygon: document.getElementById("polygon"),
     draw: document.getElementById("draw"),
     move: document.getElementById("move"),
     save: document.getElementById("save"),
-    load: document.getElementById("load")
+    load: document.getElementById("load"),
+    help: document.getElementById("help"),
+    close_help: document.getElementById("close-help")
 }
 
 var currentState = "select"
@@ -65,25 +68,16 @@ function main() {
     })
 
     button.select.addEventListener("click", () => changeState("select"))
+    button.line.addEventListener("click", () => changeState("line"))
     button.square.addEventListener("click", () => changeState("square"))
     button.rectangle.addEventListener("click", () => changeState("rectangle"))
     button.polygon.addEventListener("click", () => changeState("polygon"))
     button.move.addEventListener("click", () => changeState("move"))
-    button.draw.addEventListener("click", () => {
-        // drawPolygon(vertices);
-        polygons.push({
-            vertices, 
-            vtxcolor,
-            ctlpoint,
-            type: objState, // "lines", "square", "polygon"
-        })
-        render()
-        vertices = [];
-        vtxcolor = [];
-        ctlpoint = [];
-    })
+    button.draw.addEventListener("click", () => {addObject("polygon");render()})
     button.save.addEventListener("click", () => save())
     button.load.addEventListener("click", () => load())
+    button.help.addEventListener("click", () => help())
+    button.close_help.addEventListener("click", () => closeHelp())
 
     var menu = document.getElementById("mymenu")
     menu.addEventListener("click", () => {
@@ -93,6 +87,21 @@ function main() {
 
 function handleInput(event) {
     switch (currentState) {
+        case "line":
+            // get coordinates of clicked
+            var x = getX(event)
+            var y = getY(event)
+            // add to array
+            vertices.push(x, y);
+            vtxcolor = vtxcolor.concat(colors[cindex])
+            ctlpoint.push(newCtrlPoint(x,y))
+            if (vertices.length == 4){
+                addObject("line")
+                console.log(polygons)
+            }
+            render()
+            console.log(polygons)
+            break;
         case "square":
             // get coordinates of clicked
             x1 = getX(event)
@@ -113,11 +122,11 @@ function handleInput(event) {
             vertices.push(x4, y4);
 
             // color
+            vtxcolor = vtxcolor.concat(colors[cindex])
+            vtxcolor = vtxcolor.concat(colors[cindex])
+            vtxcolor = vtxcolor.concat(colors[cindex])
+            vtxcolor = vtxcolor.concat(colors[cindex])
             cindex = (cindex+1)%8
-            vtxcolor = vtxcolor.concat(colors[cindex])
-            vtxcolor = vtxcolor.concat(colors[cindex])
-            vtxcolor = vtxcolor.concat(colors[cindex])
-            vtxcolor = vtxcolor.concat(colors[cindex])
 
             // titik kontrol
             ctlpoint.push(newCtrlPoint(x1, y1))
@@ -125,24 +134,9 @@ function handleInput(event) {
             ctlpoint.push(newCtrlPoint(x3, y3))
             ctlpoint.push(newCtrlPoint(x4, y4))
 
-            console.log("masuk sini")
-            // push to squares
-            polygons.push({
-                vertices, 
-                vtxcolor,
-                ctlpoint,
-                type: currentState
-            })
-
-            console.log(polygons)
-
-            // render
+            // push to objects array
+            addObject("square")
             render()
-
-            // clear vertices, vtx color, 
-            vertices = []
-            vtxcolor = []
-            ctlpoint = []
 
             break;
         
@@ -183,21 +177,9 @@ function handleInput(event) {
                 ctlpoint.push(newCtrlPoint(x2, y2))
                 ctlpoint.push(newCtrlPoint(x4, y4))
 
-                // push to rectangles
-                polygons.push({
-                    vertices, 
-                    vtxcolor,
-                    ctlpoint,
-                    type: currentState
-                })
-
-                console.log(vertices)
-                // render
+                // push to objects array
+                addObject("rectangle")
                 render()
-                // clear vertices
-                vertices = []
-                vtxcolor = []
-                ctlpoint = []
             }    
             break;
         case "polygon":
@@ -241,6 +223,18 @@ function handleInput(event) {
     }
 }
 
+function addObject(type) {
+    polygons.push({
+        vertices, 
+        vtxcolor,
+        ctlpoint,
+        type,
+    })
+    vertices = [];
+    vtxcolor = [];
+    ctlpoint = [];
+}
+
 function changeState(newState) {
     if (states.indexOf(newState) === -1) return;
 
@@ -282,8 +276,29 @@ function drawPolygon(vertices, color_per_vtc) {
     gl.drawElements(gl.TRIANGLE_FAN, indices.length, gl.UNSIGNED_SHORT, 0)
 }
 
+function drawLine(vertices, color_per_vtc){
+    var vertex_buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+    gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(coord)
+
+    var cBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, cBufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(color_per_vtc), gl.STATIC_DRAW );
+    var vColor = gl.getAttribLocation( shaderProgram, "vColor" );
+    gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray(vColor);
+    gl.drawArrays(gl.LINES, 0, 2)
+}
+
 function draw(obj) {
-    drawPolygon(obj.vertices, obj.vtxcolor)
+    if (obj.type === "line") {
+        drawLine(obj.vertices, obj.vtxcolor)
+    } else {
+        drawPolygon(obj.vertices, obj.vtxcolor)
+    }
     obj.ctlpoint.forEach( p => {
         drawPolygon(p.vertices, p.vtxcolor)
     })
@@ -373,6 +388,8 @@ function changeControlPoint(event) {
     }
 
     switch (selectedObject.type) {
+        case "line": // same as polygon
+            changeCtrlPolygon(x, y)
         case "polygon":
             changeCtrlPolygon(x, y)
             break;
@@ -517,6 +534,14 @@ function load() {
     if (!file) {
         alert('Blank file')
     }
+}
+
+function help() {
+    document.getElementById("help-view").removeAttribute("hidden");
+}
+
+function closeHelp() {
+    document.getElementById("help-view").setAttribute("hidden", "true");
 }
 
 main()
