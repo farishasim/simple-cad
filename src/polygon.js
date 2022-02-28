@@ -11,7 +11,9 @@ var button = {
     select: document.getElementById("select"),
     create: document.getElementById("create"),
     draw: document.getElementById("draw"),
-    move: document.getElementById("move")
+    move: document.getElementById("move"),
+    save: document.getElementById("save"),
+    load: document.getElementById("load")
 }
 
 var currentState = "select"
@@ -69,6 +71,8 @@ function main() {
         vtxcolor = [];
         ctlpoint = [];
     })
+    button.save.addEventListener("click", () => save())
+    button.load.addEventListener("click", () => load())
 
     var menu = document.getElementById("mymenu")
     menu.addEventListener("click", () => {
@@ -253,6 +257,43 @@ function changeControlPoint(event) {
         selectedObject.vertices[idxPoint*2+1] = y
 
         selectedObject.ctlpoint[idxPoint] = newCtrlPoint(x,y)
+    }
+}
+
+function save() {
+    var data = JSON.stringify(polygons);
+    var filename = "data"
+    download(filename + ".json", data);
+}
+
+function download(filename, text) {
+    var element = document.createElement('a')
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+    element.setAttribute('download', filename)
+
+    element.style.display = 'none'
+    document.body.appendChild(element)
+
+    element.click()
+
+    document.body.removeChild(element)
+}
+
+function load() {
+    var file = document.getElementById("import_file").files[0]
+    var reader = new FileReader();
+    // var data = [];
+    reader.onload = function(e){
+        console.log('file imported')
+        polygons = JSON.parse(e.target.result);
+        // console.log(data)
+        // arrObjects = data
+        render()
+    }
+    
+    reader.readAsText(file);
+    if (!file) {
+        alert('Blank file')
     }
 }
 
