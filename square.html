@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>2D WEB CAD Persegi</title>
+</head>
+<body>
+<script id="vertex-shader" type="notjs">
+    attribute vec2 coordinates;
+    attribute vec4 vColor;
+
+    varying vec4 fColor;
+
+    void main() {
+        gl_Position = vec4(coordinates, 0.0, 1.0);
+        fColor = vColor;
+    }
+</script>
+
+<script id="fragment-shader" type="notjs">
+    precision mediump float;
+
+    varying vec4 fColor;
+
+    void main(void) {
+        gl_FragColor = fColor;
+    }
+</script>
+
+    <canvas width="300" height="300" id="canvas"></canvas>
+    <div>
+        <button id="select">Select</button>
+        <button id="create">Create</button>
+        <!-- <button id="draw">Draw</button> -->
+        <!-- <button id="c_size">Change Size</button> -->
+        <br>
+        <input type="number" id="size_square" value="5" name="size_square" min="1" max="250">
+        <button id="c_size">Change Size</button>
+    </div>
+      
+
+
+    <script src="lib/util.js"></script>
+    <script src="lib/mv.js"></script>
+    <script src="lib/shape.js"></script>
+    <!-- <script src="src/polygon.js"></script> -->
+    <script src="src/square.js"></script>
+</body>
+</html>
