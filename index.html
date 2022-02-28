@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="main.css">
     <title>2D WEB CAD</title>
 </head>
 <body>
@@ -26,52 +27,68 @@
     }
 </script>
 
-    <canvas width="500" height="500" id="canvas"></canvas>
-    <div>
-        <button id="select">Select</button>
-        <button id="move">Move</button>
-        <br>
-        <button id="line">Line</button>
-        <button id="square">Square</button>
-        <button id="rectan">Rectangle</button>
-        <button id="polygon">Polygon</button>
-        <button id="draw">Draw Polygon</button>
-        <button id="help">HELP !!</button>
-        &emsp;&emsp;&emsp;&emsp;<br><br>
-        <button id="save">Save</button>
-        <input type="file" id="import_file" accept=".json">
-        <button id="load">Load</button>
-    </div><br>
-    <div><label for="mymenu">Color : </label>
-        <select id = "mymenu" size = "8">
-        <option value = "0">White</option>        
-        <option value = "1">Black</option>
-        <option value = "2">Red</option>
-        <option value = "3">Yellow</option>
-        <option value = "4">Green</option>
-        <option value = "5">Blue</option>
-        <option value = "6">Magenta</option>
-        <option value = "7">Cyan</option>
-    </select>
-    <!-- <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn">Color</button>
-        <div id="mymenu" class="dropdown-content">
-            <option value = "0">White</option>        
-            <option value = "1">Black</option>
-            <option value = "2">Red</option>
-            <option value = "3">Yellow</option>
-            <option value = "4">Green</option>
-            <option value = "5">Blue</option>
-            <option value = "6">Magenta</option>
-            <option value = "7">Cyan</option>
+    <div class="row">
+        <div class="col-canvas">
+            <canvas width="800" height="800" id="canvas"></canvas>
         </div>
-      </div> -->
-    <div id="help-view" class="help" hidden>
-        <br>
-        <button id="close-help">Close Help</button>
+        <div class="col-btn">
+            <div class="tittle-program">
+                <h2>2D Web Based CAD</h2>
+                <h3>(Computer-Aided Design)</h3>
+            </div>
+            <div class="btn">
+                <div class="btn-file">
+                    <input type="file" id="import_file" accept=".json" class="input-box">
+                    <button id="load" class="btn-input">Load</button>
+                </div>
+                <div class="btn-help">
+                    <label for="help-btn">Do you need help?</label>
+                    <button id="help" class="help-btn">Help</button>
+                </div>
+                <div class="btn-action">
+                    <label for="btn-object"><h4>What do you want to do?</h4></label>
+                    <button id="select" class="btn-select">Select Object</button>
+                    <button id="move" class="btn-move">Move</button>
+                </div>
+                <div class="btn-object">
+                    <label for="btn-object"><h4>Choose the object that you want:</h4></label>
+                    <button id="line" class="btn-line">Line</button>
+                    <button id="square" class="btn-square">Square</button>
+                    <button id="rectan" class="btn-rectang">Rectangle</button>
+                    <button id="polygon" class="btn-polygon">Polygon</button>
+                </div>
+                <!-- &emsp;&emsp;&emsp;&emsp;<br><br> -->
+                <div class="btn-menu">
+                    <label for="mymenu">Color : </label>
+                    <select id = "mymenu" class="select-color">
+                        <option value = "0">White</option>        
+                        <option value = "1">Black</option>
+                        <option value = "2">Red</option>
+                        <option value = "3">Yellow</option>
+                        <option value = "4">Green</option>
+                        <option value = "5">Blue</option>
+                        <option value = "6">Magenta</option>
+                        <option value = "7">Cyan</option>
+                    </select>
+                </div>
+                <div class="btn-draw">
+                    <button id="draw" class="draw-polygon" hidden>Draw Polygon</button>
+                </div>
+                <div class="btn-save-clear">
+                    <!-- <button id="clear" class="btn-clear">Clear</button> -->
+                    <button id="save" class="btn-save">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+
         <!-- Modal content -->
-        <div class="help-content">
-            <h2>Menggambar Garis</h2>
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h1>Help Page</h1><br>
+          <h2>Menggambar Garis</h2>
             <p> 1. Klik tombol <strong>Line </strong> (Default sudah garis) <br/>
                 2. Klik dua koordinat pada canvas
             </p>
@@ -110,7 +127,7 @@
             </p>
             <h2>Mengganti Warna Bangun Datar</h2>
             <p>
-                1. Klik tombol <strong>Select</strong> <br />
+                1. Klik tombol <strong>Select object</strong> <br />
                 2. Pilih warna yang diinginkan pada dropdown <strong>color</strong><br/>
                 3. Pilih Bangun Datar yang ingin dirubah warnanya
             </p>
@@ -128,7 +145,7 @@
                 3. Klik tombol <strong>Load</strong><br/>
             </p>
         </div>
-    </div>
+      </div>
     </div>
     <script src="lib/util.js"></script>
     <script src="lib/mv.js"></script>

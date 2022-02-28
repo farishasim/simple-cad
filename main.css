@@ -1,0 +1,241 @@
+
+
+.row {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    flex-direction: row;
+}
+
+.col-canvas {
+    /* float: left; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.col-btn {
+    /* float: left; */
+    background-color:wheat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.tittle-program {
+    margin: 10px;
+}
+
+.btn-file, .btn-help, .btn-object, .btn-action, .btn-save-clear, .btn-menu, .btn-draw {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.input-box {
+    font-size: 16px;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 1px 1px 3px black;
+    width: 250px;
+    outline: none;
+}
+
+::-webkit-file-upload-button{
+    color: white;
+    background: #1E90FF;
+    padding: 12px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    /* box-shadow: 1px 0px 1px 1 px #6b4559; */
+}
+
+::-webkit-file-upload-button:hover{
+    background: #438a5e;
+}
+
+.btn-save-clear {
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    flex-direction: row;
+}
+
+.btn-help {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    flex-direction: column;
+}
+
+.select-color {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.btn-menu {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    flex-direction: column;
+}
+
+.btn-input {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #1E90FF;
+    border-color: #1E90FF;
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.help-btn {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #1E90FF;
+    border-color: #1E90FF;
+    width: 80px;
+    height: 36px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn-save {
+    margin-left: 15px;
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #1E90FF;
+    border-color: #1E90FF;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+.btn-clear {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: red;
+    border-color: red;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+.btn-menu {
+    margin-bottom: 25px;
+}
+
+.btn-line, .btn-square, .btn-rectang, .btn-polygon {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: #1E90FF;
+    border-color: none;
+    width: 80px;
+    height: 36px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+.btn-select {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: #1E90FF;
+    border-color: none;
+    width: 120px;
+    height: 36px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+.btn-move {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: #1E90FF;
+    border-color: none;
+    width: 80px;
+    height: 36px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+.draw-polygon {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: #1E90FF;
+    border-color: none;
+    width: 120px;
+    height: 36px;
+    text-align: center;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }

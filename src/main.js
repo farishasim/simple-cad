@@ -17,7 +17,7 @@ var button = {
     save: document.getElementById("save"),
     load: document.getElementById("load"),
     help: document.getElementById("help"),
-    close_help: document.getElementById("close-help")
+    // close_help: document.getElementById("close-help")
 }
 
 var currentState = "select"
@@ -77,11 +77,12 @@ function main() {
     button.save.addEventListener("click", () => save())
     button.load.addEventListener("click", () => load())
     button.help.addEventListener("click", () => help())
-    button.close_help.addEventListener("click", () => closeHelp())
+    // button.close_help.addEventListener("click", () => closeHelp())
 
     var menu = document.getElementById("mymenu")
     menu.addEventListener("click", () => {
         cindex = menu.selectedIndex;
+        console.log(menu.selectedIndex)
     })
 }
 
@@ -97,7 +98,6 @@ function handleInput(event) {
             ctlpoint.push(newCtrlPoint(x,y))
             if (vertices.length == 4){
                 addObject("line")
-                console.log(polygons)
             }
             render()
             console.log(polygons)
@@ -126,7 +126,6 @@ function handleInput(event) {
             vtxcolor = vtxcolor.concat(colors[cindex])
             vtxcolor = vtxcolor.concat(colors[cindex])
             vtxcolor = vtxcolor.concat(colors[cindex])
-            cindex = (cindex+1)%8
 
             // titik kontrol
             ctlpoint.push(newCtrlPoint(x1, y1))
@@ -165,7 +164,6 @@ function handleInput(event) {
                 vertices.push(x4, y4);
 
                 // colors
-                cindex = (cindex+1)%8
                 vtxcolor = vtxcolor.concat(colors[cindex])
                 vtxcolor = vtxcolor.concat(colors[cindex])
                 vtxcolor = vtxcolor.concat(colors[cindex])
@@ -246,6 +244,12 @@ function changeState(newState) {
 
     button[newState].setAttribute("disabled", "true");
     currentState = newState;
+
+    if (newState === "polygon") {
+        button.draw.removeAttribute("hidden");
+    } else {
+        button.draw.setAttribute("hidden", "true");
+    }
 }
 
 function drawPolygon(vertices, color_per_vtc) {
@@ -537,11 +541,20 @@ function load() {
 }
 
 function help() {
-    document.getElementById("help-view").removeAttribute("hidden");
+    var modal = document.getElementById("myModal");
+    var close = document.getElementsByClassName("close")[0];
+
+    modal.style.display = "block";
+
+    close.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // document.getElementById("help-view").removeAttribute("hidden");
 }
 
-function closeHelp() {
-    document.getElementById("help-view").setAttribute("hidden", "true");
-}
+// function closeHelp() {
+//     document.getElementById("help-view").setAttribute("hidden", "true");
+// }
 
 main()
