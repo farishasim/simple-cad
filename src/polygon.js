@@ -107,6 +107,9 @@ function drawPolygon(vertices, color_per_vtc) {
         indices.push(i+1);
         indices.push(i+2);
     } 
+    console.log(indices);
+    console.log(vertices);
+    console.log(vertices.length);
 
     var index_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
