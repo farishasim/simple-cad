@@ -3,15 +3,22 @@
 var gl = null
 var shaderProgram = null
 
-var states = ["select", "create"]
+var canvas = document.getElementById("canvas")
+
+var states = ["select", "create", "move"]
 
 var button = {
     select: document.getElementById("select"),
     create: document.getElementById("create"),
-    draw: document.getElementById("draw")
+    draw: document.getElementById("draw"),
+    move: document.getElementById("move")
 }
 
 var currentState = "select"
+
+var objState = "polygon"
+
+var onhold = false
 
 var colors = [
     [0.0, 0.0, 0.0, 0.0],  // white
@@ -25,18 +32,21 @@ var colors = [
 ];
 
 var cindex = 0;
+var selectedObject;
+var idxPoint;
 
 var vertices = [];
 var vtxcolor = [];
+var ctlpoint = [];
 
 var polygons = [];
 
 function main() {
-    // initialization
+    // initialization gl and shader
     init()
 
     // set background color to black
-    gl.clearColor(0, 0, 0, 1.0);
+    gl.clearColor(0.8, 0.8, 0.8, 1)
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     document.getElementById("canvas").addEventListener('mousedown', event => {
@@ -45,12 +55,19 @@ function main() {
 
     button.select.addEventListener("click", () => changeState("select"))
     button.create.addEventListener("click", () => changeState("create"))
+    button.move.addEventListener("click", () => changeState("move"))
     button.draw.addEventListener("click", () => {
         // drawPolygon(vertices);
-        polygons.push({vertices, vtxcolor})
+        polygons.push({
+            vertices, 
+            vtxcolor,
+            ctlpoint,
+            type: objState, // "lines", "square", "polygon"
+        })
         render()
         vertices = [];
         vtxcolor = [];
+        ctlpoint = [];
     })
 
     var menu = document.getElementById("mymenu")
@@ -63,21 +80,40 @@ function handleInput(event) {
     switch (currentState) {
         case "create":
             // get coordinates of clicked
-            var x = 2*event.clientX/canvas.width-1
-            var y = 2*(canvas.height-event.clientY)/canvas.height-1
+            var x = getX(event)
+            var y = getY(event)
             // add to array
             vertices.push(x, y);
             vtxcolor = vtxcolor.concat(colors[cindex])
+            ctlpoint.push(newCtrlPoint(x, y))
+            render()
             break;
         case "select":
             // get coordinates of clicked
-            var x = 2*event.clientX/canvas.width-1
-            var y = 2*(canvas.height-event.clientY)/canvas.height-1
+            var x = getX(event)
+            var y = getY(event)
             var idx = getIdxOfLastPolygonThatContains(x,y);
             console.log(idx)
             if (idx >= 0) changeColor(polygons[idx]);
             render()
             break;
+        case "move":
+            var x = getX(event)
+            var y = getY(event)
+            checkControlPoint(x, y)
+            console.log("selected object", selectedObject)
+            if (selectedObject != null) {
+                onhold = true
+                canvas.addEventListener("mouseup", event => {
+                    changeControlPoint(event)
+                    render()
+                    onhold = false
+                })
+            } else {
+                canvas.removeEventListener("mouseup", event => {
+                    changeControlPoint(event)
+                })
+            }
         default:
             break;
     }
@@ -124,9 +160,21 @@ function drawPolygon(vertices, color_per_vtc) {
     gl.drawElements(gl.TRIANGLE_FAN, indices.length, gl.UNSIGNED_SHORT, 0)
 }
 
+function draw(obj) {
+    if (obj.type == "polygon") {
+        drawPolygon(obj.vertices, obj.vtxcolor)
+        obj.ctlpoint.forEach( p => {
+            drawPolygon(p.vertices, p.vtxcolor)
+        })
+    }
+}
+
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    polygons.forEach( pol => drawPolygon(pol.vertices, pol.vtxcolor))
+    polygons.forEach( pol => draw(pol))
+    ctlpoint.forEach( p => {
+        drawPolygon(p.vertices, p.vtxcolor)
+    })
 }
 
 function changeColor(polygon) {
@@ -144,6 +192,68 @@ function getIdxOfLastPolygonThatContains(x,y) {
         if (inside([x,y], element.vertices)) idx = i;
     });
     return idx;
+}
+
+function newCtrlPoint(x, y) {
+    var control_point = [
+        x-0.025, y+0.025, x+0.025, y+0.025,
+        x+0.025, y-0.025, x-0.025, y-0.025
+    ]
+    var ctlcolor = getWhite(4)
+
+    return {
+        vertices: control_point,
+        vtxcolor: ctlcolor
+    }
+}
+
+function getWhite(n) {
+    var whites = []
+    for (let i = 0; i < n; i++) {
+        whites = whites.concat(colors[0])        
+    }
+    return whites
+}
+
+function insideBox(point, box) {
+    return point[0] >= box[0] && point[0] <= box[4] &&
+        point[1] <= box[1] && point[1] >= box[5]
+}
+
+function getX(event) {
+    var bound = canvas.getBoundingClientRect()
+    var x = event.clientX - bound.left
+    return (x - canvas.width/2) / (canvas.width/2)
+}
+
+function getY(event) {
+    var bound = canvas.getBoundingClientRect()
+    var y = event.clientY - bound.left
+    return (y - canvas.height/2) / (canvas.height/2) * -1
+}
+
+function checkControlPoint(x, y) {
+    selectedObject = null
+    polygons.forEach( pol => {
+        pol.ctlpoint.forEach( (point, i) => {
+            if (insideBox([x, y], point.vertices)) {
+                selectedObject = pol;
+                idxPoint = i;
+            }
+        })
+    })
+}
+
+function changeControlPoint(event) {
+    var x = getX(event)
+    var y = getY(event)
+
+    if (onhold) {
+        selectedObject.vertices[idxPoint*2] = x
+        selectedObject.vertices[idxPoint*2+1] = y
+
+        selectedObject.ctlpoint[idxPoint] = newCtrlPoint(x,y)
+    }
 }
 
 main()
